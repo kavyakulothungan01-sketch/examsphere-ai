@@ -13,7 +13,10 @@ import Notification from '../components/Notification';
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const getExamStatusBadge = (status) => {
   switch (status) {
-    case 'draft':       return <span className="badge badge-active" style={{ background: 'rgba(245,158,11,0.15)', color: 'var(--accent-amber)' }}>Draft</span>;
+    case 'draft':                    return <span className="badge badge-active" style={{ background: 'rgba(245,158,11,0.15)', color: 'var(--accent-amber)' }}>Draft</span>;
+    case 'question_paper_submitted': return <span className="badge badge-active" style={{ background: 'rgba(99,102,241,0.15)', color: 'var(--primary)' }}>QP Submitted</span>;
+    case 'question_paper_approved':  return <span className="badge badge-active" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)' }}>QP Approved</span>;
+    case 'ready_to_publish':         return <span className="badge badge-active" style={{ background: 'rgba(6,182,212,0.15)', color: 'var(--accent-cyan)' }}>Ready to Publish</span>;
     case 'published':   return <span className="badge badge-active" style={{ background: 'rgba(59,130,246,0.15)', color: 'var(--accent-cyan)' }}>Published</span>;
     case 'locked':      return <span className="badge badge-active" style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--accent-emerald)' }}>Locked</span>;
     case 'in_progress': return <span className="badge badge-active" style={{ background: 'rgba(139,92,246,0.15)', color: '#a78bfa' }}>In Progress</span>;
@@ -25,7 +28,9 @@ const getExamStatusBadge = (status) => {
 const getQPStatusBadge = (status) => {
   const map = {
     draft:     { bg: 'rgba(245,158,11,0.15)',  color: 'var(--accent-amber)',   label: 'Draft' },
-    submitted: { bg: 'rgba(99,102,241,0.15)',  color: 'var(--primary)',        label: 'Submitted' },
+    submitted: { bg: 'rgba(99,102,241,0.15)',  color: 'var(--primary)',        label: 'Submitted – Under Review' },
+    approved:  { bg: 'rgba(16,185,129,0.15)',  color: 'var(--accent-emerald)', label: 'Approved ✓' },
+    rejected:  { bg: 'rgba(239,68,68,0.15)',   color: '#ef4444',               label: 'Rejected – Revise' },
     published: { bg: 'rgba(16,185,129,0.15)',  color: 'var(--accent-emerald)', label: 'Published' },
   };
   const s = map[status] || { bg: 'rgba(255,255,255,0.08)', color: 'var(--text-muted)', label: status };
