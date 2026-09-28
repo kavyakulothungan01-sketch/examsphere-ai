@@ -2,7 +2,18 @@ import { io } from 'socket.io-client';
 
 let socketInstance = null;
 
-const SOCKET_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
+const getSocketUrl = () => {
+  const raw = import.meta.env.VITE_SERVER_URL || '';
+  if (raw) {
+    return raw.endsWith('/') ? raw.slice(0, -1) : raw;
+  }
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return 'http://localhost:5000';
+  }
+  return typeof window !== 'undefined' ? window.location.origin : '';
+};
+
+const SOCKET_URL = getSocketUrl();
 
 export const connectSocket = (token) => {
   if (!token) {

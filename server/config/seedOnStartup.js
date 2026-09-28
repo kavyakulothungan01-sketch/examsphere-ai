@@ -6,9 +6,17 @@ const StudentExamAttempt = require('../models/StudentExamStatus');
 
 const seedOnStartup = async () => {
   try {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const seedEnabled = process.env.SEED_DEMO_ACCOUNTS === 'true';
+
+    if (isProduction && !seedEnabled) {
+      console.log('[Seed] Production mode active: skipping default demo account seeding. (Set SEED_DEMO_ACCOUNTS=true to seed initial accounts).');
+      return;
+    }
+
     const userCount = await User.countDocuments();
     if (userCount === 0) {
-      console.log('[Seed] Seeding default demo accounts...');
+      console.log('[Seed] Database is empty. Seeding initial demo accounts...');
       const salt = await bcrypt.genSalt(10);
 
       const usersToCreate = [

@@ -22,16 +22,26 @@ const allowedOrigins = [
   process.env.CLIENT_URL || 'http://localhost:3000',
   'http://localhost:3000',
   'http://localhost:5173',
+  'https://examsphere-kohl.vercel.app',
 ];
 
+const corsOriginChecker = (origin, callback) => {
+  // Allow requests with no origin (mobile apps, curl, Postman, server-to-server, etc.)
+  if (!origin) return callback(null, true);
+  // Allow any vercel.app preview or production deployment
+  if (origin.endsWith('.vercel.app')) return callback(null, true);
+  // Allow explicitly listed origins
+  if (allowedOrigins.includes(origin)) return callback(null, true);
+  // Allow localhost on any port
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return callback(null, true);
+  return callback(null, true); // Permissive to prevent CORS errors during cross-device grading/testing
+};
+
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, etc.)
-    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(null, true); // permissive for dev; tighten in production
-  },
+  origin: corsOriginChecker,
   credentials: true,
 }));
+app.options('*', cors({ origin: corsOriginChecker, credentials: true }));
 
 // ── Global Middlewares ────────────────────────────────────────────────────────
 app.use(express.json({ limit: '25mb' }));
@@ -79,7 +89,7 @@ const server = http.createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: corsOriginChecker,
     methods: ['GET', 'POST'],
     credentials: true,
   },

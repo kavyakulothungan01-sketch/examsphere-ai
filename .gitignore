@@ -1,7 +1,15 @@
-﻿node_modules/
+node_modules/
 .env
-.env.local
+.env.*
+!.env.example
+!.env.production.example
+client/.env*
+!client/.env.example
+server/.env*
+!server/.env.example
+!server/.env.production.example
 dist/
 build/
 *.log
 client/*.timestamp-*.mjs
+.DS_Store

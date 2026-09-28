@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: examsphere-ai-backend
+    runtime: node
+    plan: free
+    region: singapore
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: USE_IN_MEMORY_DB
+        value: "false"
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        value: https://examsphere-kohl.vercel.app
+      - key: CLIENT_URL
+        value: https://examsphere-kohl.vercel.app
