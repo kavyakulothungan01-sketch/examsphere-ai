@@ -22,6 +22,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 // ── Feature Pages ────────────────────────────────────────────────────────────
 import TeacherDashboard from './pages/TeacherDashboard';
 import InvigilatorDashboard from './pages/InvigilatorDashboard';
+import InvigilatorQuestionPaperView from './pages/InvigilatorQuestionPaperView';
 import StudentDashboard from './pages/StudentDashboard';
 import ProfilePage from './pages/ProfilePage';
 import ExamCreationPage from './pages/ExamCreationPage';
@@ -31,6 +32,7 @@ import ExamDetailsPage from './pages/ExamDetailsPage';
 import UploadQuestionPaperPage from './pages/UploadQuestionPaperPage';
 import CreateQuestionPaperPage from './pages/CreateQuestionPaperPage';
 import ManageQuestionPapersPage from './pages/ManageQuestionPapersPage';
+import ReviewExtractedPaperPage from './pages/ReviewExtractedPaperPage';
 import ExamTakePage from './pages/ExamTakePage';
 
 // ── Shared layout for authenticated pages ────────────────────────────────────
@@ -141,6 +143,12 @@ function App() {
                 <AppLayout><ManageQuestionPapersPage /></AppLayout>
               </ProtectedRoute>
             } />
+            {/* Review Extracted question paper */}
+            <Route path="/teacher/question-papers/extract/:id" element={
+              <ProtectedRoute allowedRoles={['teacher', 'TEACHER']}>
+                <AppLayout><ReviewExtractedPaperPage /></AppLayout>
+              </ProtectedRoute>
+            } />
 
             {/* ── Invigilator Protected Routes ───────────────────── */}
             <Route path="/invigilator/dashboard" element={
@@ -151,6 +159,11 @@ function App() {
             <Route path="/invigilator/profile" element={
               <ProtectedRoute allowedRoles={['invigilator', 'INVIGILATOR']}>
                 <AppLayout><ProfilePage /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/invigilator/exam/:examId/question-paper" element={
+              <ProtectedRoute allowedRoles={['invigilator', 'INVIGILATOR']}>
+                <AppLayout><InvigilatorQuestionPaperView /></AppLayout>
               </ProtectedRoute>
             } />
 

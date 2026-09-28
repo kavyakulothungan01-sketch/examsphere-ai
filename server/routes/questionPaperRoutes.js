@@ -8,6 +8,8 @@ const {
   updateQuestionPaper,
   submitQuestionPaper,
   getExamQuestionPapers,
+  reviewQuestionPaper,
+  extractTextFromPaper,
 } = require('../controllers/questionPaperController');
 const { protect, authorizeRoles } = require('../middleware/authMiddleware');
 
@@ -31,5 +33,11 @@ router.route('/:id')
 
 // Submit a question paper
 router.post('/:id/submit', protect, authorizeRoles('teacher'), submitQuestionPaper);
+
+// Extract text from uploaded paper
+router.post('/:id/extract', protect, authorizeRoles('teacher'), extractTextFromPaper);
+
+// Admin review question paper
+router.post('/:id/review', protect, authorizeRoles('college_admin'), reviewQuestionPaper);
 
 module.exports = router;

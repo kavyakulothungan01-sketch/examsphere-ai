@@ -20,6 +20,7 @@ const {
   getAdminStats,
   getActivityLogs,
   registerCollegeAdmin,
+  registerPublicUser,
 } = require('../controllers/authController');
 const { protect, authorizeRoles } = require('../middleware/authMiddleware');
 const rateLimit = require('express-rate-limit');
@@ -32,6 +33,7 @@ const forgotPasswordLimiter = rateLimit({
 
 // ── Public Authentication Routes ─────────────────────────────
 router.post('/login', loginUser);
+router.post('/register', registerPublicUser);
 router.post('/admin/register', registerCollegeAdmin);
 router.post('/forgot-password', forgotPasswordLimiter, forgotPassword);
 router.put('/reset-password/:token', resetPassword);

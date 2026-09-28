@@ -166,9 +166,12 @@ const ReviewExtractedPaperPage = () => {
   if (loading) return <LoadingSpinner text="Loading question paper..." />;
   if (!qp) return <div>Not found</div>;
 
-  // Use the relative path (e.g., /uploads/...) since Vite proxies it to the backend.
-  // This avoids hardcoding http://localhost:5000 in the frontend.
-  const fileUrl = qp?.uploadedFile?.filePath || '';
+  // In local dev the Vite proxy forwards /uploads to localhost:5000.
+  // In production, VITE_SERVER_URL or VITE_API_URL is e.g. "https://examsphere-backend-lzp3.onrender.com"
+  const rawServerUrl = (import.meta.env.VITE_SERVER_URL || import.meta.env.VITE_API_URL || '').trim();
+  const backendOrigin = rawServerUrl.replace(/\/api\/?$/, '').replace(/\/$/, '');
+  const rawPath = qp?.uploadedFile?.filePath || '';
+  const fileUrl = rawPath ? (backendOrigin ? `${backendOrigin}${rawPath}` : rawPath) : '';
 
   return (
     <div className="animate-fade-in" style={{ padding: '1rem', height: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column' }}>
