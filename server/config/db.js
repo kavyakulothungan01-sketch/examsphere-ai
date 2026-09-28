@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
+  const connStr = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/examsphere_ai';
+
   try {
-    const connStr = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/examsphere_ai';
 
     // PRODUCTION GUARD: Refuse to use in-memory DB in production.
     // This prevents silent data loss in deployed environments.
