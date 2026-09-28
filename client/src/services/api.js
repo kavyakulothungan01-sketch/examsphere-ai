@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || '';
-const API_BASE_URL = `${SERVER_URL}/api`;git status
+const API_BASE_URL = `${SERVER_URL}/api`;
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
