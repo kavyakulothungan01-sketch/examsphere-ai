@@ -710,8 +710,10 @@ const CreateQuestionPaperPage = () => {
   const [loadingExams, setLoadingExams] = useState(true);
   const [saving, setSaving]             = useState(false);
   const [submitting, setSubmitting]     = useState(false);
+  const [updatingMarks, setUpdatingMarks] = useState(false);
   const [showPreview, setShowPreview]   = useState(false);
   const [notification, setNotification] = useState({ type: '', message: '' });
+  const [customTotalMarks, setCustomTotalMarks] = useState('');
 
   // Load Exams
   useEffect(() => {
@@ -732,7 +734,10 @@ const CreateQuestionPaperPage = () => {
   useEffect(() => {
     if (selectedExamId && allExams.length > 0) {
       const found = allExams.find(e => e._id === selectedExamId);
-      if (found) setSelectedExam(found);
+      if (found) {
+        setSelectedExam(found);
+        setCustomTotalMarks(found.totalMarks || '');
+      }
     }
   }, [selectedExamId, allExams]);
 
@@ -898,6 +903,27 @@ const CreateQuestionPaperPage = () => {
     }
   };
 
+  const handleContinueToDesigner = async () => {
+    if (!selectedExam) return;
+    
+    // If the teacher has changed the target total marks, update the exam in the backend
+    if (customTotalMarks !== '' && Number(customTotalMarks) !== selectedExam.totalMarks) {
+      setUpdatingMarks(true);
+      try {
+        await examAPI.updateExamTotalMarks(selectedExamId, customTotalMarks);
+        setSelectedExam(prev => ({ ...prev, totalMarks: Number(customTotalMarks) }));
+        setNotification({ type: 'success', message: 'Exam target marks updated successfully.' });
+      } catch (err) {
+        setNotification({ type: 'error', message: err.response?.data?.message || 'Failed to update target marks.' });
+        setUpdatingMarks(false);
+        return; // Don't proceed if it failed
+      }
+      setUpdatingMarks(false);
+    }
+    
+    setStep(2);
+  };
+
   // ── Step 1: Select Exam ────────────────────────────────────────────────────
   const renderStep1 = () => (
     <div className="glass-card" style={{ maxWidth: '650px', margin: '0 auto' }}>
@@ -925,6 +951,11 @@ const CreateQuestionPaperPage = () => {
                 setSelectedExamId(e.target.value);
                 const found = allExams.find(ex => ex._id === e.target.value);
                 setSelectedExam(found || null);
+                if (found) {
+                  setCustomTotalMarks(found.totalMarks || '');
+                } else {
+                  setCustomTotalMarks('');
+                }
               }}
             >
               <option value="">-- Select an Exam --</option>
@@ -936,11 +967,40 @@ const CreateQuestionPaperPage = () => {
             </select>
           </div>
 
-          {selectedExam && <ExamInfoBanner exam={selectedExam} />}
+          {selectedExam && (
+            <>
+              <ExamInfoBanner exam={selectedExam} />
+              
+              <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                <label className="form-label" htmlFor="customTotalMarks">
+                  Total Exam Marks * (Edit if different from default)
+                </label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <input
+                    type="number"
+                    id="customTotalMarks"
+                    className="form-input"
+                    value={customTotalMarks}
+                    onChange={e => setCustomTotalMarks(e.target.value)}
+                    min={1}
+                    required
+                    style={{ maxWidth: '200px' }}
+                  />
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                    Current System Value: {selectedExam.totalMarks}
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
 
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button className="btn btn-primary" disabled={!selectedExam} onClick={() => setStep(2)}>
-              <span>Continue to Question Designer</span>
+            <button 
+              className="btn btn-primary" 
+              disabled={!selectedExam || updatingMarks} 
+              onClick={handleContinueToDesigner}
+            >
+              <span>{updatingMarks ? 'Updating Marks...' : 'Continue to Question Designer'}</span>
               <ArrowRight size={18} />
             </button>
           </div>

@@ -70,17 +70,18 @@ const UploadQuestionPaperPage = () => {
       const uploadedFileId = uploadRes.data.file._id;
 
       // Step 2: Create a QuestionPaper record linking the file to the exam
-      await questionPaperAPI.linkUploadedQuestionPaper({
+      const linkRes = await questionPaperAPI.linkUploadedQuestionPaper({
         examId: selectedExamId,
         uploadedFileId,
         title: `Uploaded Paper — ${selectedExam?.title || 'Exam'}`,
       });
+      const newQpId = linkRes.data.questionPaper._id;
 
       setNotification({
         type: 'success',
-        message: 'Question paper uploaded and linked to the exam successfully!',
+        message: 'Question paper uploaded successfully! Redirecting to extraction...',
       });
-      setTimeout(() => navigate('/teacher/question-papers'), 1800);
+      setTimeout(() => navigate(`/teacher/question-papers/extract/${newQpId}`), 1800);
     } catch (err) {
       setNotification({
         type: 'error',
