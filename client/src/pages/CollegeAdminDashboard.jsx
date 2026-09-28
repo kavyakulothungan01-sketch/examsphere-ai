@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Building, UserPlus, BookOpen, ShieldCheck, GraduationCap, RefreshCw, Users,
   Eye, EyeOff, LayoutDashboard, FileText, Settings, Database, Activity, X,
@@ -975,9 +976,9 @@ const CollegeAdminDashboard = () => {
             <div className="glass-card">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                 <h2 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Exams Overview</h2>
-                <a href="/admin/exams/create" className="btn btn-primary" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', fontSize: '0.88rem' }}>
+                <Link to="/admin/exams/create" className="btn btn-primary" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', fontSize: '0.88rem' }}>
                   + Create New Exam
-                </a>
+                </Link>
               </div>
               {exams.length === 0 ? <p style={{ color: 'var(--text-muted)' }}>No exams found.</p> : (
                 <div style={{ overflowX: 'auto' }}>
@@ -1004,9 +1005,9 @@ const CollegeAdminDashboard = () => {
                           </td>
                           <td style={{ padding: '0.85rem 1rem', textAlign: 'right' }}>
                             <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-                              <a href={`/admin/exams/details/${ex._id}`} style={{ fontSize: '0.8rem', padding: '0.3rem 0.65rem', borderRadius: 'var(--radius-sm)', background: 'rgba(245,158,11,0.15)', color: '#f59e0b', textDecoration: 'none', fontWeight: 700 }}>
+                              <Link to={`/admin/exams/details/${ex._id}`} style={{ fontSize: '0.8rem', padding: '0.3rem 0.65rem', borderRadius: 'var(--radius-sm)', background: 'rgba(245,158,11,0.15)', color: '#f59e0b', textDecoration: 'none', fontWeight: 700 }}>
                                 View
-                              </a>
+                              </Link>
                               <button
                                 onClick={() => handleViewQuestionPapers(ex)}
                                 style={{ fontSize: '0.8rem', padding: '0.3rem 0.65rem', borderRadius: 'var(--radius-sm)', background: 'rgba(99,102,241,0.15)', color: 'var(--primary)', border: 'none', cursor: 'pointer', fontWeight: 700 }}
